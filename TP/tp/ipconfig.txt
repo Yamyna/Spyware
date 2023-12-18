@@ -1,0 +1,45 @@
+
+Configuration IP de Windows
+
+
+Carte r‚seau sans fil Connexion au r‚seau local* 1ÿ:
+
+   Statut du m‚dia. . . . . . . . . . . . : M‚dia d‚connect‚
+   Suffixe DNS propre … la connexion. . . : 
+
+Carte r‚seau sans fil Connexion au r‚seau local* 2ÿ:
+
+   Statut du m‚dia. . . . . . . . . . . . : M‚dia d‚connect‚
+   Suffixe DNS propre … la connexion. . . : 
+
+Carte Ethernet VMware Network Adapter VMnet1 :
+
+   Suffixe DNS propre … la connexion. . . : 
+   Adresse IPv6 de liaison locale. . . . .: fe80::25c:4a8:895b:b925%16
+   Adresse IPv4. . . . . . . . . . . . . .: 192.168.42.1
+   Masque de sous-r‚seau. . . .ÿ. . . . . : 255.255.255.0
+   Passerelle par d‚faut. . . .ÿ. . . . . : 
+
+Carte Ethernet VMware Network Adapter VMnet8 :
+
+   Suffixe DNS propre … la connexion. . . : 
+   Adresse IPv6 de liaison locale. . . . .: fe80::ff37:8e26:330:5d5d%12
+   Adresse IPv4. . . . . . . . . . . . . .: 192.168.40.1
+   Masque de sous-r‚seau. . . .ÿ. . . . . : 255.255.255.0
+   Passerelle par d‚faut. . . .ÿ. . . . . : 
+
+Carte Ethernet VMware Network Adapter VMnet2 :
+
+   Suffixe DNS propre … la connexion. . . : 
+   Adresse IPv6 de liaison locale. . . . .: fe80::d3ac:e047:47a8:4371%11
+   Adresse IPv4. . . . . . . . . . . . . .: 192.168.10.1
+   Masque de sous-r‚seau. . . .ÿ. . . . . : 255.255.255.0
+   Passerelle par d‚faut. . . .ÿ. . . . . : 
+
+Carte r‚seau sans fil Wi-Fiÿ:
+
+   Suffixe DNS propre … la connexion. . . : esgi.local
+   Adresse IPv6 de liaison locale. . . . .: fe80::9129:653e:6eaf:81a%3
+   Adresse IPv4. . . . . . . . . . . . . .: 10.33.5.223
+   Masque de sous-r‚seau. . . .ÿ. . . . . : 255.255.0.0
+   Passerelle par d‚faut. . . .ÿ. . . . . : 10.33.0.1
